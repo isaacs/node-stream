@@ -9,10 +9,14 @@ var s1 = new Stream(),
   s3 = new Stream(),
   out = "";
 s1.addListener("data", function (chunk) { s2.write(chunk) });
+s1.addListener("eof", function () { s2.close() });
 s2.addListener("data", function (chunk) { s3.write(chunk) });
+s2.addListener("eof", function () { s3.close(); s3.close(); s3.close(); });
 s3.addListener("data", function (chunk) { chunk && (out += chunk + " ") });
 
 s2.addListener("drain", function () { out += "\n--DRAIN--\n" });
+s2.addListener("eof", function () { out += "\n--s3 EOF--\n" });
+
 
 function message () {
   out += "-1-";
